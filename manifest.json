@@ -1,0 +1,70 @@
+{
+  "manifest_version": 3,
+  "name": "Trust",
+  "version": "1.0",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*.linkedin.com/*"
+  ],
+  "action": {
+    "default_icon": {
+      "16": "img/icon16.png",
+      "48": "img/icon48.png",
+      "128": "img/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://contacts.google.com/*"],
+      "js": ["content.js"]
+    },
+    {
+      "matches": ["https://*.linkedin.com/*"],
+      "js": ["content.js", "linkedin_content_script.js"]
+    },
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["whatsapp_content_script.js"]
+    },
+    {
+      "matches": ["*://twitter.com/*", "*://x.com/*"],
+      "js": ["twitter_content_script.js"]
+    },
+    {
+      "matches": ["https://*.discord.com/*"],
+      "js": ["discord_content_script.js"]
+    },
+    {
+      "matches": ["https://web.telegram.org/*"],
+      "js": ["telegram_content_script.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "lib/*",
+        "telegram_api_inject.js",
+        "options.html",
+        "auth.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}

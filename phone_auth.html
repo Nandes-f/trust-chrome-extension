@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phone Authentication</title>
+    <script src="firebase-app.js"></script>
+    <script src="firebase-auth.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input, button { margin: 10px 0; padding: 5px; }
+        #error { color: red; }
+    </style>
+</head>
+<body>
+    <h2>Login</h2>
+    <input type="tel" id="phoneNumber" placeholder="Enter phone number" />
+    <button id="sendCode">Send Code</button>
+    <div id="recaptcha-container"></div>
+    <input type="text" id="verificationCode" placeholder="Enter verification code" style="display: none;" />
+    <button id="verifyCode" style="display: none;">Verify Code</button>
+    <div id="error"></div>
+
+    <script src="phone_auth.js"></script>
+</body>
+</html>

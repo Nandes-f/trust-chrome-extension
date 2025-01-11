@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Contacts</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body {
+      width: 300px;
+      padding: 0;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      background-color: #5e92f2;
+      color: white;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .menu {
+      z-index: 1;
+      display: flex;
+      gap: 10px;
+    }
+    .menu-item {
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    #content {
+      padding: 10px;
+      min-height: 280px;
+    }
+    #scrapeButton {
+      display: block;
+      margin: 10px auto;
+      padding: 5px 10px;
+    }
+    #contactList {
+      margin-top: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .material-icons {
+      font-size: 24px;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -200px;
+      width: 200px;
+      height: 100%;
+      background-color: #fff;
+      transition: 0.3s;
+      padding-top: 20px;
+      
+    }
+    .sidebar.active {
+      left: 0;
+      border-right: 1px solid #adacac;
+    }
+    .sidebar a {
+      padding: 8px 8px 8px 12px;
+      text-decoration: none;
+      font-size: 12px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      transition: 0.3s;
+    }
+    .sidebar a:hover {
+      color: #5e92f2;
+    }
+    .sidebar a .material-icons {
+      margin-right: 10px;
+    }
+    .welcome-message {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .login-options {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+    .login-button {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      width: 200px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      justify-content: flex-start;
+    }
+    .login-button i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    .login-button svg {
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+    }
+    .google-login { background-color: #4285F4; color: white; }
+    .facebook-login { background-color: #3b5998; color: white; }
+    .linkedin-login { background-color: #0077B5; color: white; }
+    .amazon-login { background-color: #FF9900; color: black; }
+    .twitter-login { background-color: #1DA1F2; color: white; }
+    .whatsapp-login { background-color: #128C7E; color: white; }
+    .contacts-button { background-color: #FF9900; color: white; }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      background-color: #5e92f2;
+      color: white;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+    .logo {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
+    .search-container {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      border-radius: 20px;
+      padding: 5px 10px;
+    }
+    .search-input {
+      border: none;
+      outline: none;
+      background: transparent;
+      margin-left: 5px;
+      font-size: 14px;
+    }
+    .menu-icon {
+      cursor: pointer;
+    }
+
+    .sidebar {
+  position: fixed;
+  top: 0;
+  left: -200px;
+  width: 200px;
+  height: 100%;
+  background-color: #fff;
+  transition: 0.3s;
+  padding-top: 50px; /* Increased to accommodate the close button */
+  z-index: 1000;
+}
+
+.sidebar.active {
+  left: 0;
+  border-right: 1px solid #adacac;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  text-decoration: none;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+}
+
+.sidebar .closebtn .Contacts-text {
+  color: #5e92f2;
+  font-size: 18px;
+  font-weight: bold;
+  flex-grow: 1;
+  text-align: start;
+  margin-left: 12px;
+}
+
+.sidebar .closebtn .material-icons {
+  font-size: 24px;
+}
+
+.sidebar a .material-icons {
+  margin-right: 10px;
+}
+
+.table-container {
+  margin-top: 20px;
+  overflow-x: auto;
+  width: 100%;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="menu">
+      <a href="#" class="menu-item" id="sidebarToggle" title="Menu">
+        <i class="material-icons">menu</i>
+      </a>
+    </div>
+    <h1>Contacts</h1>
+    <div class="placeholder"></div>
+  </header>
+  <div id="mySidebar" class="sidebar">
+    <a href="#" class="closebtn" id="sidebarClose">
+      <span class="Contacts-text">Contacts</span> <i class="material-icons">close</i>
+    </a>
+    <a href="#" id="contactsLink">
+      <i class="material-icons">contacts</i>
+      Contacts
+    </a>
+    <!-- <a href="#" id="importLink">
+      <i class="material-icons">file_upload</i>
+      Import
+    </a>
+    <a href="#" id="exportLink">
+      <i class="material-icons">file_download</i>
+      Export
+    </a> -->
+    <a href="#" id="mergeAndFixLink">
+      <i class="material-icons">merge_type</i>
+      Enhance
+    </a>
+    <a href="#" id="clearDataLink">
+      <i class="material-icons">delete_sweep</i>
+      Delete
+    </a>
+  </div>
+  <div id="content">
+    <div class="welcome-message"></div>
+    <div class="login-options">
+      <!-- <button class="login-button amazon-login" id="amazonLogin">
+        <i class="material-icons">shopping_cart</i>
+        Login with Amazon
+      </button> -->
+      <button class="login-button contacts-button" id="contactsButton">
+        <i class="material-icons">contacts</i>
+        Contacts
+      </button>
+      <button class="login-button google-login" id="googleLogin">
+        <i class="material-icons">account_circle</i>
+        Login with Google
+      </button>
+      <!-- <button class="login-button facebook-login" id="facebookLogin">
+        <i class="material-icons">facebook</i>
+        Login with Facebook
+      </button> -->
+      
+      <button class="login-button linkedin-login" id="linkedinLogin">
+        <i class="material-icons">work</i>
+        Login with LinkedIn
+      </button>
+      <button class="login-button twitter-login" id="twitterLogin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+        Login with X
+      </button>
+      <button class="login-button whatsapp-login" id="whatsappLogin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+        Login with WhatsApp
+      </button>
+    </div>
+    <span id="scrapeButton" style="display: none;">Contacts your contacts</span>
+    <div id="contactList"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

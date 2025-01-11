@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trust</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Google Sans", Roboto, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      background-color: #f8fafd;
+    }
+    .sidebar {
+      width: 240px;
+      height: 100vh;
+      background: #ffffff;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 1000;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      border-right: 1px solid #dadce0;
+      overflow-y: auto;
+    }
+    .main-content {
+      flex-grow: 1;
+      padding: 24px;
+      margin-left: 256px; /* Match the sidebar width */
+      overflow-y: auto;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+    .hamburger-icon {
+      cursor: pointer;
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    .main-content.expanded {
+      margin-left: 0;
+    }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 24px;
+      color: #202124;
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      gap: 16px;
+      margin: 2px 0;
+    }
+    .sidebar-item:hover {
+      background-color: #f5f5f5;
+    }
+    .sidebar-item.active {
+      background-color: #e8f0fe;
+      color: #1a73e8;
+      font-weight: 500;
+    }
+    .sidebar-item i {
+      font-size: 20px;
+      color: #5f6368;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sidebar-item.active i {
+      color: #1a73e8;
+    }
+    /* .sidebar-separator {
+      height: 1px;
+      background-color: #dadce0;
+      margin: 8px 0;
+    } */
+    .nav-section-title {
+      padding: 8px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #5f6368;
+    }
+    /* User Profile styling */
+    #userProfile {
+      margin: 8px 8px;
+      background-color: transparent;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    #userProfile.active {
+      background-color: #e8f0fe;
+    }
+    #userProfile i {
+      width: 36px;
+      height: 36px;
+      background: #e8eaed;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #5f6368;
+    }
+    /* Platform icons styling */
+    .sidebar-item svg {
+      margin-right: 16px;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .sidebar-item.active svg {
+      fill: #1a73e8;
+    }
+    /* Scrollbar styling */
+    .sidebar::-webkit-scrollbar {
+      width: 8px;
+    }
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: #dadce0;
+      border-radius: 4px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .sidebar.hidden {
+        transform: translateX(-100%);
+      }
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 24px;
+      color: #202124;
+    }
+    .option {
+      margin-bottom: 16px;
+    }
+    .option label {
+      display: flex;
+      align-items: center;
+    }
+    .option input[type="checkbox"] {
+      margin-right: 16px;
+    }
+    button {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: "Google Sans", Roboto, Arial, sans-serif;
+      font-size: 14px;
+    }
+    button:hover {
+      background-color: #185abc;
+    }
+    .header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
+    }
+    .header-content {
+      display: flex;
+      align-items: center;
+    }
+    .Contacts-icon {
+      width: 32px;
+      height: 32px;
+      margin-right: 12px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+    .table-container {
+      margin-top: 20px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .action-buttons {
+      margin-top: 20px;
+    }
+    .action-button {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: "Google Sans", Roboto, Arial, sans-serif;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+    .action-button:hover {
+      background-color: #185abc;
+    }
+    .sidebar-separator {
+      border-top: 1px solid #e0e0e0;
+      margin: 8px 0;
+    }
+    .platform-title {
+      margin-top: 0;
+    }
+    .action-icons {
+      display: flex;
+      gap: 15px;
+    }
+    .action-icon {
+      font-size: 24px;
+      
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .action-icon:hover {
+      color: #185abc;
+    }
+    table img {
+      display: block;
+      margin: 0 auto;
+    }
+    .merge-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .aHij0b-WsjYwc {
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .BzmaYd {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+    }
+    .VUwpXb {
+      margin-right: 10px;
+    }
+    .cLrQzc {
+      font-weight: bold;
+    }
+    .sdnrlc {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px;
+    }
+    .mUIrbf-LgbsSe, .FOBRw-LgbsSe {
+      margin-left: 10px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .mUIrbf-LgbsSe {
+      background-color: #f1f3f4;
+    }
+    .FOBRw-LgbsSe {
+      background-color: #1a73e8;
+      color: white;
+    }
+    .merge-fix-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .duplicate-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .duplicate-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    }
+
+    .duplicate-content {
+      padding: 16px;
+      background: #fff;
+    }
+
+    .contact-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+    }
+
+    .contact-avatar {
+      margin-right: 16px;
+    }
+
+    .avatar-image {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .contact-details {
+      flex-grow: 1;
+    }
+
+    .contact-name {
+      font-weight: 500;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .contact-meta {
+      font-size: 14px;
+      color: #5f6368;
+    }
+
+    .contact-index {
+      margin-right: 8px;
+    }
+
+    .phone-type {
+      font-size: 12px;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    .dismiss-button, .merge-button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    .dismiss-button {
+      background-color: #f1f3f4;
+      color: #5f6368;
+      margin-right: 8px;
+    }
+
+    .dismiss-button:hover {
+      background-color: #e8eaed;
+    }
+
+    .merge-button {
+      background-color: #1a73e8;
+      color: white;
+    }
+
+    .merge-button:hover {
+      background-color: #185abc;
+    }
+    .icon {
+  position: relative;
+  cursor: pointer;
+  margin: 0 5px;
+  font-size: 18px;
+}
+
+.icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.icon:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.edit-icon {
+  color: #625f5f;
+}
+
+.delete-icon {
+  color: #625f5f;
+}
+.sidebar-item svg {
+  margin-right: 16px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.whatsapp-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.whatsapp-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #128C7E;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.whatsapp-button:hover {
+  background-color: #128C7E;
+}
+
+.whatsapp-button .material-icons {
+  font-size: 18px;
+}
+    .sidebar-item.has-submenu {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .expand-icon {
+      font-size: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .expand-icon.rotated {
+      transform: rotate(180deg);
+    }
+
+    .submenu {
+      margin-left: 20px;
+    }
+
+    .submenu-item {
+      font-size: 14px;
+    }
+    .star-rating {
+  unicode-bidi: bidi-override;
+  color: #ccc;
+  font-size: 25px;
+  height: 25px;
+  width: 125px;
+  margin: 0 auto;
+  position: relative;
+  padding: 0;
+}
+
+.star-rating .star {
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.star-rating .star.active {
+  color: #ffcc00;
+}
+
+.floating-sync-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.floating-sync-button:hover {
+  background-color: #185abc;
+  transform: scale(1.05);
+}
+
+.floating-sync-button i {
+  font-size: 24px;
+}
+
+/* Additional styles for user profile text */
+#userProfile::after {
+  content: attr(data-name);
+  font-size: 14px;
+  color: #1a73e8;
+  font-weight: 500;
+}
+
+/* Phone number style */
+#userProfile + .phone-number {
+  font-size: 13px;
+  color: #5f6368;
+  margin-top: 2px;
+}
+  </style>
+</head>
+<script src="lib/papaparse.min.js"></script>
+<script src="lib/firebase-app.js"></script>
+<script src="lib/firebase-auth.js"></script>
+<script src="lib/firebase-firestore.js"></script>
+<script src="lib/qrcode.min.js"></script>
+<script src="lib/auth.js"></script>
+<body>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-item active" style="margin-top: 20px;">
+      <i class="material-icons">contacts</i>
+      Contacts
+    </div>
+    <div class="sidebar-separator"></div>
+    <div class="sidebar-item">
+      <i class="material-icons">monitor_heart</i>
+      Activity
+    </div>
+    
+    <div class="sidebar-item">
+      <i class="material-icons">merge_type</i>
+      Enhance
+    </div>
+    <div class="sidebar-item">
+      <i class="material-icons">delete_sweep</i>
+      Delete
+    </div>
+    <div class="sidebar-separator"></div>
+    <!-- <div class="sidebar-item">
+      <i class="material-icons">shopping_cart</i>
+      Amazon
+    </div> -->
+    <div class="sidebar-item" style="display: none;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+      </svg>
+      Discord
+    </div>
+    <div class="sidebar-item">
+      <i class="material-icons">account_circle</i>
+      Google
+      <!-- <i class="material-icons expand-icon">expand_more</i> -->
+    </div>
+    <!-- <div class="submenu" style="display: block;">
+      <div class="sidebar-item">
+        <i class="material-icons">contacts</i>
+        <span style="display: none;">G</span>Contacts
+      </div>
+      <div class="sidebar-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+        Maps
+      </div>
+    </div> -->
+    <div class="sidebar-item">
+      <i class="material-icons">business</i>
+      LinkedIn
+    </div>
+    <!-- <div class="sidebar-item">
+      <i class="material-icons">public</i>
+      Facebook
+    </div> -->
+    <div class="sidebar-item" style="display: none;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+      </svg>
+      Telegram
+    </div>
+    <div class="sidebar-item" style="gap: 16px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1200 1227" fill="currentColor" style="margin-right: 0;">
+        <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+      </svg>
+      Twitter
+    </div>
+    <!-- <div class="sidebar-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+      </svg>
+      WhatsApp
+    </div> -->
+    
+    
+    <div class="sidebar-separator"></div>
+    <div class="sidebar-item" id="userProfile" style="padding-left: 8px;">
+      <i class="material-icons">account_box</i>
+    </div>
+    
+    
+  </div>
+  <div class="main-content" id="mainContent">
+    <div id="optionContent">
+      <!-- Content will be dynamically updated here -->
+    </div>
+  </div>
+  <script src="services/db.js"></script>
+  <script src="options.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const googleMenuItem = document.querySelector('.sidebar-item.has-submenu');
+      const submenu = document.querySelector('.submenu');
+      const expandIcon = googleMenuItem.querySelector('.expand-icon');
+
+      googleMenuItem.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent this click from triggering the parent click event
+        submenu.style.display = submenu.style.display === 'none' ? 'block' : 'none';
+        expandIcon.classList.toggle('rotated');
+      });
+
+      // Prevent submenu items from toggling the submenu
+      const submenuItems = document.querySelectorAll('.submenu-item');
+      submenuItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+      });
+
+      // Update the Activity sidebar item event listener
+      const activityItem = document.querySelector('.sidebar-item:nth-child(4)');
+      activityItem.addEventListener('click', function() {
+        const optionContent = document.getElementById('optionContent');
+        optionContent.innerHTML = `
+          <div class="header">
+            <div class="header-content">
+              <i class="material-icons Contacts-icon">monitor_heart</i>
+              <h1>Activity</h1>
+            </div>
+          </div>
+          <div class="activity-content">
+            <!-- Add your activity content here -->
+            <p>Welcome to the Activity section. Here you can track and manage your activities.</p>
+          </div>
+        `;
+      });
+
+      // Get all sidebar items including user profile
+      const sidebarItems = document.querySelectorAll('.sidebar-item');
+
+      // Add click handler for all sidebar items
+      sidebarItems.forEach(item => {
+        item.addEventListener('click', function() {
+          // Remove active class from all items
+          sidebarItems.forEach(i => i.classList.remove('active'));
+          // Add active class to clicked item
+          item.classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
